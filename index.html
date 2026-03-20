@@ -639,9 +639,9 @@ footer{background:var(--bg);border-top:1px solid var(--border);
       <h2 class="section-title">Let's <em>Connect</em></h2>
       <p class="section-sub">Open to research collaborations, speaking engagements, consulting, and new opportunities in bioinformatics, genomics, and AI.</p>
       <div class="contact-links reveal-left">
-        <a href="mailto:Justiceoheneamofa@gmail.com" class="contact-link">
+        <a href="/cdn-cgi/l/email-protection#03497670776a60666c6b666d66626e6c656243646e626a6f2d606c6e" class="contact-link">
           <div class="icon">📧</div>
-          <div><div class="cl-label">Email (Direct)</div><div class="cl-value">Justiceoheneamofa@gmail.com</div></div>
+          <div><div class="cl-label">Email (Direct)</div><div class="cl-value"><span class="__cf_email__" data-cfemail="bbf1cec8cfd2d8ded4d3ded5dedad6d4dddafbdcd6dad2d795d8d4d6">[email&#160;protected]</span></div></div>
         </a>
         <a href="https://github.com/iamamofa" target="_blank" class="contact-link">
           <div class="icon"><i class="fab fa-github"></i></div>
@@ -659,7 +659,7 @@ footer{background:var(--bg);border-top:1px solid var(--border);
     </div>
     <div class="reveal">
       <p class="form-title">Send a Message 💬</p>
-      <p class="form-sub">Messages are delivered directly to my inbox at justiceoheneamofa@gmail.com</p>
+      <p class="form-sub">Messages are delivered directly to my inbox at <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="ff958a8c8b969c9a90979a919a9e9290999ebf98929e9693d19c9092">[email&#160;protected]</a></p>
       <div id="formFeedback" class="form-feedback"></div>
       <form class="contact-form" id="contactForm" novalidate>
         <div class="form-row">
@@ -685,14 +685,21 @@ footer{background:var(--bg);border-top:1px solid var(--border);
   <div class="footer-links">
     <a href="https://github.com/iamamofa" target="_blank"><i class="fab fa-github"></i></a>
     <a href="https://www.linkedin.com/in/joamofa/" target="_blank"><i class="fab fa-linkedin"></i></a>
-    <a href="mailto:Justiceoheneamofa@gmail.com"><i class="fas fa-envelope"></i></a>
+    <a href="/cdn-cgi/l/email-protection#e1ab9492958882848e89848f84808c8e8780a1868c80888dcf828e8c"><i class="fas fa-envelope"></i></a>
     <a href="https://iamamofa.github.io" target="_blank"><i class="fas fa-globe"></i></a>
   </div>
 </footer>
 
 <script>
-// ══ EmailJS ══
-emailjs.init('jHZjFfZvTXR6UDjnN');
+// ══ EmailJS — Service: service_kdkuu8k (Gmail: justiceoheneamofa@gmail.com) ══
+emailjs.init({
+  publicKey: 'jHZjFfZvTXR6UDjnN',
+  // Block headless browsers to protect against spam
+  blockHeadless: true,
+  limitRate: {
+    throttle: 10000, // 1 email per 10s
+  },
+});
 
 // ══ Theme ══
 const root = document.documentElement;
@@ -823,9 +830,20 @@ if(form){
     if(si) si.textContent='⏳';
 
     try {
-      await emailjs.send('service_portfolio','template_contact',{
-        from_name:name, from_email:email, subject:subj, organization:org, message:msg,
-        to_name:'Justice Ohene Amofa', reply_to:email
+      // Build a rich message body that includes all form fields
+      const fullMsg = `${msg}\n\n---\nEmail: ${email}\nOrganisation: ${org}\nSubject: ${subj}`;
+      // Format timestamp for the {{time}} variable in the template
+      const now = new Date();
+      const timeStr = now.toLocaleString('en-GB', {
+        weekday:'long', year:'numeric', month:'long',
+        day:'numeric', hour:'2-digit', minute:'2-digit', timeZoneName:'short'
+      });
+
+      await emailjs.send('service_kdkuu8k','template_contact',{
+        name:    name,          // {{name}} — sender's name
+        message: fullMsg,       // {{message}} — full message + contact details
+        time:    timeStr,       // {{time}} — formatted timestamp
+        reply_to: email,        // sets reply-to header so you can reply directly
       });
       showFb('success','Message sent! Justice will respond within 24–48 hours. 🎉');
       form.reset();
@@ -834,7 +852,7 @@ if(form){
       // Fallback: open mail client
       const body='From: '+name+' ('+email+')\nOrganisation: '+org+'\n\n'+msg;
       window.location.href='mailto:justiceoheneamofa@gmail.com?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body);
-      showFb('success','Opening your email app to send the message directly... 📬');
+      showFb('success','Opening your email app to complete sending... 📬');
     } finally {
       btn.disabled=false;
       if(st) st.textContent='Send Message';
