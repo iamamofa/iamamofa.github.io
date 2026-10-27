@@ -249,7 +249,7 @@ article.active{display:block;animation:fadeIn .4s ease}
 .projects-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .proj-card{background:var(--bg-card2);border:1px solid var(--border);border-radius:14px;
   overflow:hidden;transition:all var(--transition);display:none}
-.proj-card.active{display:block;animation:fadeIn .3s ease}
+.proj-card.active{display:flex;flex-direction:column;animation:fadeIn .3s ease}
 .proj-card:hover{border-color:hsl(0,0%,28%);transform:translateY(-4px);box-shadow:var(--shadow-3)}
 .proj-thumb{position:relative;overflow:hidden;aspect-ratio:16/10;background:var(--bg-main)}
 .proj-thumb img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease}
@@ -259,7 +259,7 @@ article.active{display:block;animation:fadeIn .4s ease}
 .proj-card:hover .proj-overlay{opacity:1}
 .proj-overlay-icon{width:44px;height:44px;border-radius:50%;background:var(--accent);
   display:flex;align-items:center;justify-content:center;color:#000;font-size:18px}
-.proj-body{padding:16px}
+.proj-body{padding:18px;flex:1}
 .proj-cat{font-size:10px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
 .proj-title{font-size:14px;font-weight:600;color:var(--text-1);margin-bottom:6px}
 .proj-desc{font-size:12px;color:var(--text-2);line-height:1.6}
@@ -327,6 +327,27 @@ textarea.form-input{min-height:120px;resize:vertical}
 /* ANIMATIONS */
 .reveal{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease}
 .reveal.visible{opacity:1;transform:translateY(0)}
+
+/* PROJECT CATALOGUE */
+.project-toolbar{display:flex;align-items:flex-end;gap:16px;justify-content:space-between;margin-bottom:20px}
+.project-search{flex:1;max-width:480px}
+.project-search label{display:block;font-size:12px;font-weight:500;color:var(--text-3);margin-bottom:7px}
+.project-search input{width:100%;min-width:0;background:var(--bg-input);border:1px solid var(--border);border-radius:10px;padding:12px 14px;color:var(--text-1);font:inherit;font-size:13px}
+.project-search input:focus{outline:2px solid var(--accent-cyan);outline-offset:2px}
+.project-count{font-size:12px;color:var(--text-3);margin:-8px 0 20px}
+.project-visual{height:104px;padding:20px;display:flex;align-items:center;justify-content:space-between;gap:16px;background:linear-gradient(135deg,rgba(0,212,255,.14),rgba(0,229,160,.05));border-bottom:1px solid var(--border);color:var(--accent-cyan)}
+.project-visual i{font-size:30px}
+.project-visual span{font-size:10px;line-height:1.5;text-align:right;letter-spacing:.5px;text-transform:uppercase;color:var(--text-2)}
+.project-visual.ml{background:linear-gradient(135deg,rgba(157,123,255,.18),rgba(0,212,255,.05));color:#bca4ff}
+.project-visual.mobile{background:linear-gradient(135deg,rgba(0,229,160,.16),rgba(0,212,255,.05));color:var(--accent-green)}
+.project-visual.utilities,.project-visual.ui{background:linear-gradient(135deg,rgba(255,199,94,.16),rgba(255,199,94,.03));color:var(--accent)}
+.project-tech{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.project-tech span{font-size:10px;padding:3px 7px;background:var(--bg-main);border:1px solid var(--border);border-radius:5px;color:var(--text-2)}
+.project-links{display:flex;flex-wrap:wrap;gap:12px;padding:0 18px 18px}
+.project-links a{font-size:11px;font-weight:600;color:var(--accent-cyan);display:inline-flex;align-items:center;gap:6px}
+.project-links a:hover{color:var(--accent);text-decoration:underline}
+.project-empty{padding:30px 20px;border:1px solid var(--border);border-radius:14px;text-align:center;font-size:14px;background:var(--bg-card2)}
+@media(max-width:600px){.project-toolbar{align-items:stretch;flex-direction:column}.project-search{max-width:none}.project-toolbar .btn-dl{align-self:flex-start}.project-visual{height:90px}}
 
 /* CV CONTENT */
 .page-intro{font-size:14px;line-height:1.8;margin-bottom:24px;color:var(--text-2)}
@@ -708,124 +729,696 @@ textarea.form-input{min-height:120px;resize:vertical}
 
   <!-- ══ PROJECTS ══ -->
   <article id="page-projects">
-    <div class="page-header"><h2>Projects &amp; Works</h2></div>
-    <p class="page-intro">Selected genomics tools, research platforms, data pipelines, and software applications.</p>
-    <div class="filter-bar" id="filterBar">
-      <button class="filter-btn active" data-filter="all">All</button>
-      <button class="filter-btn" data-filter="bioinformatics">Bioinformatics</button>
-      <button class="filter-btn" data-filter="web">Web Apps</button>
-      <button class="filter-btn" data-filter="ml">Machine Learning</button>
-      <button class="filter-btn" data-filter="data">Data Engineering</button>
+    <div class="page-header"><h2>Projects &amp; Tools</h2></div>
+    <p class="page-intro">Genomics pipelines, research tools, web and mobile apps, and smaller utilities from my GitHub and portfolio. Explore the source code, open available apps, or filter by topic.</p>
+    <div class="project-toolbar">
+      <div class="project-search"><label for="projectSearch">Search projects</label><input id="projectSearch" type="search" placeholder="Search tools, languages, or topics…" autocomplete="off" aria-controls="projectsGrid"></div>
+      <a class="btn-dl secondary" href="https://github.com/iamamofa?tab=repositories" target="_blank" rel="noopener noreferrer"><i class="fab fa-github" aria-hidden="true"></i> Browse GitHub</a>
     </div>
+    <div class="filter-bar" id="filterBar" aria-label="Filter projects by category">
+      <button class="filter-btn active" data-filter="all" aria-pressed="true">All</button>
+      <button class="filter-btn" data-filter="bioinformatics" aria-pressed="false">Bioinformatics</button>
+      <button class="filter-btn" data-filter="web" aria-pressed="false">Web Apps</button>
+      <button class="filter-btn" data-filter="ml" aria-pressed="false">ML &amp; AI</button>
+      <button class="filter-btn" data-filter="data" aria-pressed="false">Data Engineering</button>
+      <button class="filter-btn" data-filter="mobile" aria-pressed="false">Mobile Apps</button>
+      <button class="filter-btn" data-filter="utilities" aria-pressed="false">Utilities</button>
+      <button class="filter-btn" data-filter="ui" aria-pressed="false">UI &amp; Learning</button>
+    </div>
+    <p class="project-count" id="projectCount" role="status" aria-live="polite">Showing all 67 projects</p>
     <div class="projects-grid" id="projectsGrid">
-      <div class="proj-card active" data-cat="web">
-        <div class="proj-thumb">
-          <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&amp;h=250&amp;fit=crop" alt="Genomics training portal" loading="lazy">
-          <a href="https://genofluxcore.com/" target="_blank" rel="noopener noreferrer" class="proj-overlay" aria-label="Open PANGenS training portal"><div class="proj-overlay-icon"><i class="fas fa-external-link-alt" aria-hidden="true"></i></div></a>
-        </div>
-        <div class="proj-body"><div class="proj-cat">Learning Management · Genomics</div><div class="proj-title">🎓 PANGenS Training Portal</div><div class="proj-desc">Built and manages the online learning platform for free training courses available to PANGenS consortium members.</div></div>
-      </div>
-
       <div class="proj-card active" data-cat="bioinformatics">
-        <div class="proj-thumb">
-          <img src="https://images.unsplash.com/photo-1530026405186-ed1f139313f8?w=400&h=250&fit=crop" alt="Flux Inventory" loading="lazy">
-          <a href="https://flux-inc.onrender.com" target="_blank" rel="noopener noreferrer" class="proj-overlay" aria-label="Open Flux Inventory System"><div class="proj-overlay-icon"><i class="fas fa-external-link-alt"></i></div></a>
-        </div>
+        <div class="project-visual bioinformatics" aria-hidden="true"><i class="fas fa-dna"></i><span>Pipeline</span></div>
         <div class="proj-body">
-          <div class="proj-cat">Bioinformatics · Web App</div>
-          <div class="proj-title">🗂️ Flux Inventory System</div>
-          <div class="proj-desc">Scientific inventory management for research institutes — tracks stock levels, supports operational continuity, and includes ongoing maintenance and bug fixes.</div>
+          <div class="proj-cat">Bioinformatics</div>
+          <h3 class="proj-title">HumanG_Fusion</h3>
+          <p class="proj-desc">Modular RNA-seq fusion detection with preprocessing, optional decontamination, STAR alignment, multiple fusion callers, and merged gene annotations.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Nextflow</span><span>Docker</span><span>RNA-seq</span></div>
         </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/HumanG_Fusion" target="_blank" rel="noopener noreferrer" aria-label="View source for HumanG_Fusion"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
       </div>
       <div class="proj-card active" data-cat="bioinformatics">
-        <div class="proj-thumb">
-          <img src="https://images.unsplash.com/photo-1576086213369-97a306d36557?w=400&h=250&fit=crop" alt="TB Detection" loading="lazy">
-          <a href="https://iamamofa-tb-detection-tb-detection-appapp-xlqsyp.streamlit.app/" target="_blank" rel="noopener noreferrer" class="proj-overlay" aria-label="Open TB Detection App"><div class="proj-overlay-icon"><i class="fas fa-external-link-alt"></i></div></a>
-        </div>
+        <div class="project-visual bioinformatics" aria-hidden="true"><i class="fas fa-dna"></i><span>Pipeline</span></div>
         <div class="proj-body">
-          <div class="proj-cat">Bioinformatics · Streamlit</div>
-          <div class="proj-title">🫁 TB Detection App</div>
-          <div class="proj-desc">TB detection application via genomic sequencing — part of the GSB Africa program at NMIMR for training students in bioinformatics-based TB analysis.</div>
+          <div class="proj-cat">Bioinformatics</div>
+          <h3 class="proj-title">BACLAB</h3>
+          <p class="proj-desc">Run bacterial whole-genome analysis in Google Colab, from read trimming and quality control to single-end or paired-end genome assembly.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Google Colab</span><span>Conda</span><span>SPAdes</span></div>
         </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/BACLAB" target="_blank" rel="noopener noreferrer" aria-label="View source for BACLAB"><i class="fab fa-github" aria-hidden="true"></i> Source code</a><a href="https://colab.research.google.com/drive/1MC1bg80356yF6ivsmNk4wxjYUu7elNRh?usp=sharing" target="_blank" rel="noopener noreferrer" aria-label="Open notebook: BACLAB"><i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i> Open notebook</a></div>
+      </div>
+      <div class="proj-card active" data-cat="web bioinformatics">
+        <div class="project-visual web" aria-hidden="true"><i class="fas fa-globe"></i><span>Web app</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Web Apps</div>
+          <h3 class="proj-title">Flux Inventory System</h3>
+          <p class="proj-desc">Research inventory management with stock tracking and a Django administrator portal for laboratory and facility operations.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Django</span><span>Python</span><span>SQLite</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/Flux.Inc" target="_blank" rel="noopener noreferrer" aria-label="View source for Flux Inventory System"><i class="fab fa-github" aria-hidden="true"></i> Source code</a><a href="https://flux-inc.onrender.com/" target="_blank" rel="noopener noreferrer" aria-label="Visit project: Flux Inventory System"><i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i> Visit project</a></div>
       </div>
       <div class="proj-card active" data-cat="bioinformatics">
-        <div class="proj-thumb">
-          <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=250&fit=crop" alt="PANGenS" loading="lazy">
-          <a href="https://pangens.org/" target="_blank" rel="noopener noreferrer" class="proj-overlay" aria-label="Open PANGenS Web Platform"><div class="proj-overlay-icon"><i class="fas fa-external-link-alt"></i></div></a>
-        </div>
+        <div class="project-visual bioinformatics" aria-hidden="true"><i class="fas fa-dna"></i><span>Pipeline</span></div>
         <div class="proj-body">
-          <div class="proj-cat">Web Platform · Genomics</div>
-          <div class="proj-title">🌍 PANGenS Web Platform</div>
-          <div class="proj-desc">Built and maintains the PANGenS consortium website, alongside an online training portal offering free courses for consortium members.</div>
+          <div class="proj-cat">Bioinformatics</div>
+          <h3 class="proj-title">E. coli WGS Pipeline</h3>
+          <p class="proj-desc">SLURM-compatible analysis covering quality control, assembly, annotation, variants, pangenomics, phylogeny, and resistance profiling.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Bash</span><span>SLURM</span><span>WGS</span></div>
         </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/WGS_Ecoli_bac" target="_blank" rel="noopener noreferrer" aria-label="View source for E. coli WGS Pipeline"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="bioinformatics">
+        <div class="project-visual bioinformatics" aria-hidden="true"><i class="fas fa-dna"></i><span>Pipeline adaptation</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Bioinformatics</div>
+          <h3 class="proj-title">Nf-NeST</h3>
+          <p class="proj-desc">Nextflow and Docker adaptation of NeST for standardized sequence analysis, consensus variant calling, SNP filtering, and summary reports.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Nextflow</span><span>Docker</span><span>Variant calling</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/Nf-Nest-ONT" target="_blank" rel="noopener noreferrer" aria-label="View source for Nf-NeST"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="bioinformatics">
+        <div class="project-visual bioinformatics" aria-hidden="true"><i class="fas fa-dna"></i><span>Pipeline</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Bioinformatics</div>
+          <h3 class="proj-title">GCF Bact Pipeline</h3>
+          <p class="proj-desc">Bacterial analysis workflow for read preparation, reference mapping, variant filtering, consensus sequences, and phylogenetic tree construction.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Python</span><span>Bash</span><span>Docker</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/GCF_Bact" target="_blank" rel="noopener noreferrer" aria-label="View source for GCF Bact Pipeline"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="bioinformatics">
+        <div class="project-visual bioinformatics" aria-hidden="true"><i class="fas fa-dna"></i><span>Pipeline</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Bioinformatics</div>
+          <h3 class="proj-title">Cholera WGS Toolkit</h3>
+          <p class="proj-desc">Modular scripts for Vibrio cholerae read QC, assembly, annotation, AMR screening, comparative genomics, phylogeny, and reference mapping.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Bash</span><span>WGS</span><span>AMR</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/cholera_scripts" target="_blank" rel="noopener noreferrer" aria-label="View source for Cholera WGS Toolkit"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="bioinformatics data">
+        <div class="project-visual bioinformatics" aria-hidden="true"><i class="fas fa-dna"></i><span>Analysis toolkit</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Bioinformatics</div>
+          <h3 class="proj-title">Phylogenetic Tree &amp; Metadata Plots</h3>
+          <p class="proj-desc">Annotate phylogenies with sample metadata, resistance profiles, MLST, heatmaps, and circular or rectangular tree layouts.</p>
+          <div class="project-tech" aria-label="Technologies"><span>R</span><span>ggtree</span><span>tidyverse</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/Tree_scripts" target="_blank" rel="noopener noreferrer" aria-label="View source for Phylogenetic Tree &amp; Metadata Plots"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="bioinformatics data">
+        <div class="project-visual bioinformatics" aria-hidden="true"><i class="fas fa-dna"></i><span>Research toolkit</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Bioinformatics</div>
+          <h3 class="proj-title">Drug Synergy Analysis</h3>
+          <p class="proj-desc">Fit HSA and MuSyC combination-response models and visualize dose-response surfaces, synergy heatmaps, and cell-line experiments.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Python</span><span>MuSyC</span><span>HSA</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/synergy_drug" target="_blank" rel="noopener noreferrer" aria-label="View source for Drug Synergy Analysis"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="bioinformatics utilities">
+        <div class="project-visual bioinformatics" aria-hidden="true"><i class="fas fa-dna"></i><span>Utility</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Bioinformatics</div>
+          <h3 class="proj-title">Discovery Studio Batch Visualizer</h3>
+          <p class="proj-desc">Perl scripts and setup guidance for processing PDB structures and organizing Discovery Studio visualization outputs on Windows.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Perl</span><span>PDB</span><span>Discovery Studio</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/Discovery_sulizer" target="_blank" rel="noopener noreferrer" aria-label="View source for Discovery Studio Batch Visualizer"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="bioinformatics">
+        <div class="project-visual bioinformatics" aria-hidden="true"><i class="fas fa-dna"></i><span>Group project</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Bioinformatics</div>
+          <h3 class="proj-title">STR Expansion Analysis</h3>
+          <p class="proj-desc">Collaborative workflow for investigating disease-associated short tandem repeats using ExpansionHunter, Samtools, and REViewer.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Bash</span><span>ExpansionHunter</span><span>Samtools</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/DSI_Project_Group_2" target="_blank" rel="noopener noreferrer" aria-label="View source for STR Expansion Analysis"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="ml bioinformatics">
+        <div class="project-visual ml" aria-hidden="true"><i class="fas fa-brain"></i><span>Research prototype</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">ML &amp; AI</div>
+          <h3 class="proj-title">TB Detection App</h3>
+          <p class="proj-desc">Streamlit research prototype that classifies chest X-ray images using a TensorFlow/Keras model with ResNet50 transfer learning.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Python</span><span>TensorFlow</span><span>Streamlit</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/TB-detection" target="_blank" rel="noopener noreferrer" aria-label="View source for TB Detection App"><i class="fab fa-github" aria-hidden="true"></i> Source code</a><a href="https://iamamofa-tb-detection-tb-detection-appapp-xlqsyp.streamlit.app/" target="_blank" rel="noopener noreferrer" aria-label="Visit project: TB Detection App"><i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i> Visit project</a></div>
+      </div>
+      <div class="proj-card active" data-cat="ml bioinformatics">
+        <div class="project-visual ml" aria-hidden="true"><i class="fas fa-brain"></i><span>Research prototype</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">ML &amp; AI</div>
+          <h3 class="proj-title">NMIMR MEDICT</h3>
+          <p class="proj-desc">Computer vision research project exploring lung cancer, kidney cancer, and brain tumour classification from medical images.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Python</span><span>Computer vision</span><span>Deep learning</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/NMIMR_MEDICT" target="_blank" rel="noopener noreferrer" aria-label="View source for NMIMR MEDICT"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="bioinformatics web">
+        <div class="project-visual bioinformatics" aria-hidden="true"><i class="fas fa-dna"></i><span>Web platform</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Bioinformatics</div>
+          <h3 class="proj-title">Genome Explorer Training Platform</h3>
+          <p class="proj-desc">Course-handbook interface with chapters, learning objectives, prerequisites, datasets, and training schedules for structured genomics learning.</p>
+          <div class="project-tech" aria-label="Technologies"><span>TypeScript</span><span>React</span><span>Training</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/genome-explorer" target="_blank" rel="noopener noreferrer" aria-label="View source for Genome Explorer Training Platform"><i class="fab fa-github" aria-hidden="true"></i> Source code</a><a href="https://genome-explorer-beige.vercel.app" target="_blank" rel="noopener noreferrer" aria-label="Visit project: Genome Explorer Training Platform"><i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i> Visit project</a></div>
+      </div>
+      <div class="proj-card active" data-cat="bioinformatics">
+        <div class="project-visual bioinformatics" aria-hidden="true"><i class="fas fa-dna"></i><span>Pipeline</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Bioinformatics</div>
+          <h3 class="proj-title">NMIMR Cholegen Analyzer</h3>
+          <p class="proj-desc">Local pipeline that automates cholera pathogen analysis through an updated Bacpage workflow for NMIMR.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Bacpage</span><span>Cholera</span><span>WGS</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/seqafrica/bacpage_nmimr" target="_blank" rel="noopener noreferrer" aria-label="View source for NMIMR Cholegen Analyzer"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="web bioinformatics">
+        <div class="project-visual web" aria-hidden="true"><i class="fas fa-globe"></i><span>Web platform</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Web Apps</div>
+          <h3 class="proj-title">PANGenS Training Portal</h3>
+          <p class="proj-desc">Online learning management platform providing free training courses for PANGenS consortium members.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Learning management</span><span>Genomics</span></div>
+        </div>
+        <div class="project-links"><a href="https://genofluxcore.com/" target="_blank" rel="noopener noreferrer" aria-label="Visit project: PANGenS Training Portal"><i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i> Visit project</a></div>
+      </div>
+      <div class="proj-card active" data-cat="web bioinformatics">
+        <div class="project-visual web" aria-hidden="true"><i class="fas fa-globe"></i><span>Website</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Web Apps</div>
+          <h3 class="proj-title">PANGenS Consortium Website</h3>
+          <p class="proj-desc">Consortium website supporting the Pan-Africa Network for Genomics Surveillance and its training activities.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Web development</span><span>Genomics</span></div>
+        </div>
+        <div class="project-links"><a href="https://pangens.org/" target="_blank" rel="noopener noreferrer" aria-label="Visit project: PANGenS Consortium Website"><i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i> Visit project</a></div>
       </div>
       <div class="proj-card active" data-cat="data">
-        <div class="proj-thumb">
-          <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=250&fit=crop" alt="ETL Pipeline" loading="lazy">
-          <a href="https://github.com/iamamofa/Final_project_Justice_goodreads_etl_pipeline" target="_blank" rel="noopener noreferrer" class="proj-overlay" aria-label="Open GoodReads ETL Pipeline"><div class="proj-overlay-icon"><i class="fas fa-external-link-alt"></i></div></a>
-        </div>
+        <div class="project-visual data" aria-hidden="true"><i class="fas fa-database"></i><span>Data pipeline</span></div>
         <div class="proj-body">
-          <div class="proj-cat">Data Engineering · AWS</div>
-          <div class="proj-title">📊 GoodReads ETL Pipeline</div>
-          <div class="proj-desc">Real-time data pipeline ingesting GoodReads API data to AWS S3 with Spark ETL jobs scheduled in Airflow every 10 minutes.</div>
+          <div class="proj-cat">Data Engineering</div>
+          <h3 class="proj-title">GoodReads ETL Pipeline</h3>
+          <p class="proj-desc">Data engineering capstone with API ingestion, S3 storage, Spark transformations, Airflow scheduling, and Redshift warehouse loading.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Python</span><span>Spark</span><span>Airflow</span><span>AWS</span></div>
         </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/Final_project_Justice_goodreads_etl_pipeline" target="_blank" rel="noopener noreferrer" aria-label="View source for GoodReads ETL Pipeline"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
       </div>
-      <div class="proj-card active" data-cat="bioinformatics">
-        <div class="proj-thumb">
-          <img src="https://images.unsplash.com/photo-1614935151651-0bea6508db6b?w=400&h=250&fit=crop" alt="Cholegen" loading="lazy">
-          <a href="https://github.com/seqafrica/bacpage_nmimr" target="_blank" rel="noopener noreferrer" class="proj-overlay" aria-label="Open NMIMR Cholegen Analyzer"><div class="proj-overlay-icon"><i class="fas fa-external-link-alt"></i></div></a>
-        </div>
+      <div class="proj-card active" data-cat="web utilities data">
+        <div class="project-visual web" aria-hidden="true"><i class="fas fa-globe"></i><span>Web app</span></div>
         <div class="proj-body">
-          <div class="proj-cat">Pipeline · Genomics</div>
-          <div class="proj-title">🦠 NMIMR Cholegen Analyzer</div>
-          <div class="proj-desc">Automates cholera pathogen analysis through an updated Bacpage pipeline for NMIMR. Runs locally; conversion to a web application is in development.</div>
+          <div class="proj-cat">Web Apps</div>
+          <h3 class="proj-title">Website Text Scraper</h3>
+          <p class="proj-desc">Extract text from a supplied webpage URL, review the results with source and scrape date, and download a CSV table.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Python</span><span>Web scraping</span><span>CSV</span></div>
         </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/scrape_website" target="_blank" rel="noopener noreferrer" aria-label="View source for Website Text Scraper"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="web">
+        <div class="project-visual web" aria-hidden="true"><i class="fas fa-globe"></i><span>Web app</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Web Apps</div>
+          <h3 class="proj-title">Xcelsz Meeting Scheduler</h3>
+          <p class="proj-desc">React scheduling portal with meeting creation, available-slot calendars, meeting lists, user views, and timezone helpers.</p>
+          <div class="project-tech" aria-label="Technologies"><span>React</span><span>JavaScript</span><span>Scheduling</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/scheduler_xcelsz" target="_blank" rel="noopener noreferrer" aria-label="View source for Xcelsz Meeting Scheduler"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="web">
+        <div class="project-visual web" aria-hidden="true"><i class="fas fa-globe"></i><span>Web app</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Web Apps</div>
+          <h3 class="proj-title">Brukefiler Storage Drive</h3>
+          <p class="proj-desc">Spring Boot application for managing uploaded files, notes, and saved credentials with user accounts and access controls.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Java</span><span>Spring Boot</span><span>Maven</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/brukefiler" target="_blank" rel="noopener noreferrer" aria-label="View source for Brukefiler Storage Drive"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="mobile">
+        <div class="project-visual mobile" aria-hidden="true"><i class="fas fa-mobile-screen-button"></i><span>Mobile app</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Mobile Apps</div>
+          <h3 class="proj-title">Cafscore</h3>
+          <p class="proj-desc">Football app with fixtures, match events, team lineups, player details, and match statistics.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Flutter</span><span>Dart</span><span>REST APIs</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/Cafscore" target="_blank" rel="noopener noreferrer" aria-label="View source for Cafscore"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="mobile">
+        <div class="project-visual mobile" aria-hidden="true"><i class="fas fa-mobile-screen-button"></i><span>Mobile app</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Mobile Apps</div>
+          <h3 class="proj-title">FuelSta</h3>
+          <p class="proj-desc">Cross-platform Flutter application for fuel stations.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Flutter</span><span>Dart</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/FuelSta" target="_blank" rel="noopener noreferrer" aria-label="View source for FuelSta"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="mobile">
+        <div class="project-visual mobile" aria-hidden="true"><i class="fas fa-mobile-screen-button"></i><span>Mobile app</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Mobile Apps</div>
+          <h3 class="proj-title">Soccer Live App</h3>
+          <p class="proj-desc">Flutter football application with API-backed match information, match tiles, and statistics views.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Flutter</span><span>Dart</span><span>REST APIs</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/Soccer_live_App" target="_blank" rel="noopener noreferrer" aria-label="View source for Soccer Live App"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="mobile">
+        <div class="project-visual mobile" aria-hidden="true"><i class="fas fa-mobile-screen-button"></i><span>Mobile app</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Mobile Apps</div>
+          <h3 class="proj-title">Planets Education App</h3>
+          <p class="proj-desc">Educational app for exploring the planets and reading detailed information about the solar system.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Flutter</span><span>Dart</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/PlanetsEducationApp" target="_blank" rel="noopener noreferrer" aria-label="View source for Planets Education App"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="mobile utilities">
+        <div class="project-visual mobile" aria-hidden="true"><i class="fas fa-mobile-screen-button"></i><span>Mobile app</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Mobile Apps</div>
+          <h3 class="proj-title">GradeCalcus GPA Calculator</h3>
+          <p class="proj-desc">Swift application for calculating grade point averages.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Swift</span><span>Xcode</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/Gpa-Calcus" target="_blank" rel="noopener noreferrer" aria-label="View source for GradeCalcus GPA Calculator"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="mobile utilities">
+        <div class="project-visual mobile" aria-hidden="true"><i class="fas fa-mobile-screen-button"></i><span>Mobile app</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Mobile Apps</div>
+          <h3 class="proj-title">PalCalcus Calculator</h3>
+          <p class="proj-desc">Modern calculator interface and application built with Flutter.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Flutter</span><span>Dart</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/PalCalcus" target="_blank" rel="noopener noreferrer" aria-label="View source for PalCalcus Calculator"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="mobile utilities">
+        <div class="project-visual mobile" aria-hidden="true"><i class="fas fa-mobile-screen-button"></i><span>Mobile app</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Mobile Apps</div>
+          <h3 class="proj-title">BMI Calculator</h3>
+          <p class="proj-desc">Flutter BMI calculator with reusable controls, input screens, calculation logic, and results views.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Flutter</span><span>Dart</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/BMIFlutter-" target="_blank" rel="noopener noreferrer" aria-label="View source for BMI Calculator"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="mobile">
+        <div class="project-visual mobile" aria-hidden="true"><i class="fas fa-mobile-screen-button"></i><span>Mobile prototype</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Mobile Apps</div>
+          <h3 class="proj-title">Smart Home App</h3>
+          <p class="proj-desc">Flutter smart-home application and interface prototype.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Flutter</span><span>Dart</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/SmartHomeApp" target="_blank" rel="noopener noreferrer" aria-label="View source for Smart Home App"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="utilities ml">
+        <div class="project-visual utilities" aria-hidden="true"><i class="fas fa-screwdriver-wrench"></i><span>Utility</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Utilities</div>
+          <h3 class="proj-title">Language Detector</h3>
+          <p class="proj-desc">Small Python utility that identifies the language of a text sample using langdetect.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Python</span><span>langdetect</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/LanguageDetector" target="_blank" rel="noopener noreferrer" aria-label="View source for Language Detector"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="utilities">
+        <div class="project-visual utilities" aria-hidden="true"><i class="fas fa-screwdriver-wrench"></i><span>Utility</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Utilities</div>
+          <h3 class="proj-title">QRcodeVeter</h3>
+          <p class="proj-desc">Convert a URL into a QR code with a short Python notebook workflow.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Python</span><span>QR codes</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/QRcodeVeter" target="_blank" rel="noopener noreferrer" aria-label="View source for QRcodeVeter"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="utilities">
+        <div class="project-visual utilities" aria-hidden="true"><i class="fas fa-screwdriver-wrench"></i><span>Utility</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Utilities</div>
+          <h3 class="proj-title">Hexadecimal Converter</h3>
+          <p class="proj-desc">Python notebook examples for converting numeric inputs between binary, decimal, and hexadecimal representations.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Python</span><span>Number conversion</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/AlgorihtmzHexa" target="_blank" rel="noopener noreferrer" aria-label="View source for Hexadecimal Converter"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="ml utilities">
+        <div class="project-visual ml" aria-hidden="true"><i class="fas fa-brain"></i><span>Computer vision tool</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">ML &amp; AI</div>
+          <h3 class="proj-title">Image Color Detector</h3>
+          <p class="proj-desc">Inspect image pixels and display their closest color names and RGB values using OpenCV and a color lookup table.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Python</span><span>OpenCV</span><span>Pandas</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/ColorDetector" target="_blank" rel="noopener noreferrer" aria-label="View source for Image Color Detector"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="ml utilities">
+        <div class="project-visual ml" aria-hidden="true"><i class="fas fa-brain"></i><span>Computer vision tool</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">ML &amp; AI</div>
+          <h3 class="proj-title">Hand Tracking Module</h3>
+          <p class="proj-desc">Webcam hand-landmark detection with MediaPipe and OpenCV, including an on-screen frame-rate display.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Python</span><span>MediaPipe</span><span>OpenCV</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/Simple_HandTrackingDetectionModule" target="_blank" rel="noopener noreferrer" aria-label="View source for Hand Tracking Module"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="ml web">
+        <div class="project-visual ml" aria-hidden="true"><i class="fas fa-brain"></i><span>ML experiment</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">ML &amp; AI</div>
+          <h3 class="proj-title">Sentiment Analyzer</h3>
+          <p class="proj-desc">Streamlit text-classification experiment using review datasets, count-vector features, and a Bernoulli Naive Bayes classifier.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Python</span><span>Scikit-learn</span><span>Streamlit</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/Sentiment-Analyzer" target="_blank" rel="noopener noreferrer" aria-label="View source for Sentiment Analyzer"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="ml data">
+        <div class="project-visual ml" aria-hidden="true"><i class="fas fa-brain"></i><span>Learning project</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">ML &amp; AI</div>
+          <h3 class="proj-title">Student Grade Prediction</h3>
+          <p class="proj-desc">Linear-regression study for predicting student grades, using Python data preparation and model training.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Python</span><span>Pandas</span><span>Scikit-learn</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/studentGradePredict" target="_blank" rel="noopener noreferrer" aria-label="View source for Student Grade Prediction"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="ml bioinformatics">
+        <div class="project-visual ml" aria-hidden="true"><i class="fas fa-brain"></i><span>Research adaptation</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">ML &amp; AI</div>
+          <h3 class="proj-title">Breast Cancer Classification</h3>
+          <p class="proj-desc">CNN and transfer-learning experiment with breast histopathology images, based on the research code credited in the repository.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Python</span><span>CNN</span><span>Transfer learning</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/breast_Cancer_Classification" target="_blank" rel="noopener noreferrer" aria-label="View source for Breast Cancer Classification"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
       </div>
       <div class="proj-card active" data-cat="ml">
-        <div class="proj-thumb">
-          <img src="https://images.unsplash.com/photo-1516110833967-0b5716ca1387?w=400&h=250&fit=crop" alt="Breast Cancer" loading="lazy">
-          <a href="https://github.com/iamamofa/breast_Cancer_Classification" target="_blank" rel="noopener noreferrer" class="proj-overlay" aria-label="Open Breast Cancer Classification"><div class="proj-overlay-icon"><i class="fas fa-external-link-alt"></i></div></a>
-        </div>
+        <div class="project-visual ml" aria-hidden="true"><i class="fas fa-brain"></i><span>ML experiment</span></div>
         <div class="proj-body">
-          <div class="proj-cat">Machine Learning</div>
-          <div class="proj-title">🎗️ Breast Cancer Classification</div>
-          <div class="proj-desc">ML model for breast cancer classification using clinical and genomic features — early detection and diagnostic support tool.</div>
+          <div class="proj-cat">ML &amp; AI</div>
+          <h3 class="proj-title">Fake News Detection</h3>
+          <p class="proj-desc">Notebook-based text-classification experiment for exploring fake-news detection.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Python</span><span>Jupyter</span><span>Text classification</span></div>
         </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/FakeNewsDetector" target="_blank" rel="noopener noreferrer" aria-label="View source for Fake News Detection"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="ml data">
+        <div class="project-visual ml" aria-hidden="true"><i class="fas fa-brain"></i><span>Learning project</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">ML &amp; AI</div>
+          <h3 class="proj-title">Bank Loan Campaign Model</h3>
+          <p class="proj-desc">Training project exploring customer data and models for predicting responses to a bank personal-loan campaign.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Python</span><span>Jupyter</span><span>Data analysis</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/Bank_Loan_Model" target="_blank" rel="noopener noreferrer" aria-label="View source for Bank Loan Campaign Model"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="ml data">
+        <div class="project-visual ml" aria-hidden="true"><i class="fas fa-brain"></i><span>Group project</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">ML &amp; AI</div>
+          <h3 class="proj-title">Nsoroma Loan Analysis</h3>
+          <p class="proj-desc">Loan-data exploration, cleaning, visualization, and modelling notebooks from the Nsoroma team project.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Python</span><span>Pandas</span><span>Jupyter</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/Nsoroma-Loans" target="_blank" rel="noopener noreferrer" aria-label="View source for Nsoroma Loan Analysis"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="data">
+        <div class="project-visual data" aria-hidden="true"><i class="fas fa-database"></i><span>Analysis script</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Data Engineering</div>
+          <h3 class="proj-title">Correlation Analysis</h3>
+          <p class="proj-desc">Calculate and visualize feature correlations in a tabular dataset using Pandas, Seaborn, and Matplotlib.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Python</span><span>Pandas</span><span>Seaborn</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/Pypi-Projects/blob/main/Correlation.py" target="_blank" rel="noopener noreferrer" aria-label="View source for Correlation Analysis"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="utilities">
+        <div class="project-visual utilities" aria-hidden="true"><i class="fas fa-screwdriver-wrench"></i><span>Script example</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Utilities</div>
+          <h3 class="proj-title">PDF to Word Converter</h3>
+          <p class="proj-desc">Python conversion-script example for turning a PDF file into a Word document.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Python</span><span>PDF</span><span>DOCX</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/Pypi-Projects/blob/main/PdFconverter.py" target="_blank" rel="noopener noreferrer" aria-label="View source for PDF to Word Converter"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="utilities">
+        <div class="project-visual utilities" aria-hidden="true"><i class="fas fa-screwdriver-wrench"></i><span>Script example</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Utilities</div>
+          <h3 class="proj-title">PDF OCR Text Extractor</h3>
+          <p class="proj-desc">Convert PDF pages to images and collect OCR text into a text output file.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Python</span><span>Tesseract</span><span>pdf2image</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/Pypi-Projects/blob/main/Text_Extractor.py" target="_blank" rel="noopener noreferrer" aria-label="View source for PDF OCR Text Extractor"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="utilities">
+        <div class="project-visual utilities" aria-hidden="true"><i class="fas fa-screwdriver-wrench"></i><span>Learning project</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Utilities</div>
+          <h3 class="proj-title">Password Picker</h3>
+          <p class="proj-desc">Notebook experiment for assembling random passwords with Python string and random utilities.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Python</span><span>Jupyter</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/Pypi-Projects/blob/main/PasswordPickerr/passwordpicker.ipynb" target="_blank" rel="noopener noreferrer" aria-label="View source for Password Picker"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="bioinformatics">
+        <div class="project-visual bioinformatics" aria-hidden="true"><i class="fas fa-dna"></i><span>Training resource</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Bioinformatics</div>
+          <h3 class="proj-title">NGS Mapping Scripts</h3>
+          <p class="proj-desc">Introductory R scripts and bioinformatics training materials for sequence mapping exercises.</p>
+          <div class="project-tech" aria-label="Technologies"><span>R</span><span>NGS</span><span>Training</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/Training_NGS" target="_blank" rel="noopener noreferrer" aria-label="View source for NGS Mapping Scripts"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="bioinformatics">
+        <div class="project-visual bioinformatics" aria-hidden="true"><i class="fas fa-dna"></i><span>Training resource</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Bioinformatics</div>
+          <h3 class="proj-title">Vibrio cholerae Galaxy Course</h3>
+          <p class="proj-desc">Hands-on course materials covering cholera sequencing QC, assembly, annotation, comparative genomics, and reproducible Galaxy workflows.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Galaxy</span><span>Bioinformatics</span><span>Training</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/Galaxy" target="_blank" rel="noopener noreferrer" aria-label="View source for Vibrio cholerae Galaxy Course"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="bioinformatics">
+        <div class="project-visual bioinformatics" aria-hidden="true"><i class="fas fa-dna"></i><span>Collaborative resource</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Bioinformatics</div>
+          <h3 class="proj-title">Cholera Genomic Surveillance Guidance</h3>
+          <p class="proj-desc">PHA4GE working-group guidance covering the analysis and interpretation of Vibrio cholerae genomic surveillance data.</p>
+          <div class="project-tech" aria-label="Technologies"><span>PHA4GE</span><span>Genomic surveillance</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/Cholera-guidance" target="_blank" rel="noopener noreferrer" aria-label="View source for Cholera Genomic Surveillance Guidance"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="web utilities">
+        <div class="project-visual web" aria-hidden="true"><i class="fas fa-globe"></i><span>API example</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Web Apps</div>
+          <h3 class="proj-title">C++ REST Client &amp; Web API</h3>
+          <p class="proj-desc">Example C++ HTTP REST client paired with a C# ASP.NET Web API and product endpoint.</p>
+          <div class="project-tech" aria-label="Technologies"><span>C++</span><span>C#</span><span>ASP.NET</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/RestApiCpp" target="_blank" rel="noopener noreferrer" aria-label="View source for C++ REST Client &amp; Web API"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
       </div>
       <div class="proj-card active" data-cat="web">
-        <div class="proj-thumb">
-          <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=250&fit=crop" alt="Travel" loading="lazy">
-          <a href="https://afrivoyos.com" target="_blank" rel="noopener noreferrer" class="proj-overlay" aria-label="Open Afriyovos Travel &amp; Tour"><div class="proj-overlay-icon"><i class="fas fa-external-link-alt"></i></div></a>
-        </div>
+        <div class="project-visual web" aria-hidden="true"><i class="fas fa-globe"></i><span>Website</span></div>
         <div class="proj-body">
-          <div class="proj-cat">Web Application</div>
-          <div class="proj-title">✈️ Afriyovos Travel & Tour</div>
-          <div class="proj-desc">Full-featured travel and tour web application for a Ghanaian travel agency, built with modern web technologies.</div>
+          <div class="proj-cat">Web Apps</div>
+          <h3 class="proj-title">Mass Industries Website</h3>
+          <p class="proj-desc">Static business website built with HTML, CSS, and JavaScript.</p>
+          <div class="project-tech" aria-label="Technologies"><span>HTML</span><span>CSS</span><span>JavaScript</span></div>
         </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/MassIndustriesWebsite" target="_blank" rel="noopener noreferrer" aria-label="View source for Mass Industries Website"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
       </div>
       <div class="proj-card active" data-cat="web">
-        <div class="proj-thumb">
-          <img src="https://images.unsplash.com/photo-1562577309-4932fdd64cd1?w=400&h=250&fit=crop" alt="MsFlava" loading="lazy">
-          <a href="https://msflavamakeup.com" target="_blank" rel="noopener noreferrer" class="proj-overlay" aria-label="Open MsFlava Makeup"><div class="proj-overlay-icon"><i class="fas fa-external-link-alt"></i></div></a>
-        </div>
+        <div class="project-visual web" aria-hidden="true"><i class="fas fa-globe"></i><span>Website</span></div>
         <div class="proj-body">
-          <div class="proj-cat">Web Application</div>
-          <div class="proj-title">💄 MsFlava Makeup</div>
-          <div class="proj-desc">E-commerce and portfolio website for a makeup artist brand, built with full product showcase and contact system.</div>
+          <div class="proj-cat">Web Apps</div>
+          <h3 class="proj-title">Afriyovos Travel &amp; Tour</h3>
+          <p class="proj-desc">Travel and tour website built for a Ghanaian travel agency.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Web development</span></div>
         </div>
+        <div class="project-links"><a href="https://afrivoyos.com" target="_blank" rel="noopener noreferrer" aria-label="Visit project: Afriyovos Travel &amp; Tour"><i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i> Visit project</a></div>
       </div>
       <div class="proj-card active" data-cat="web">
-        <div class="proj-thumb">
-          <img src="https://images.unsplash.com/photo-1643903006626-a5d58429bee0?w=400&h=250&fit=crop" alt="Covid Tracker" loading="lazy">
-          <a href="https://covid-19-tracker-e4bda.web.app" target="_blank" rel="noopener noreferrer" class="proj-overlay" aria-label="Open Covid-19 Tracker"><div class="proj-overlay-icon"><i class="fas fa-external-link-alt"></i></div></a>
-        </div>
+        <div class="project-visual web" aria-hidden="true"><i class="fas fa-globe"></i><span>Website</span></div>
         <div class="proj-body">
-          <div class="proj-cat">Web App · Data Viz</div>
-          <div class="proj-title">🦠 Covid-19 Tracker</div>
-          <div class="proj-desc">Real-time COVID-19 tracking dashboard with global statistics, charts, and country-level breakdowns.</div>
+          <div class="proj-cat">Web Apps</div>
+          <h3 class="proj-title">MsFlava Makeup</h3>
+          <p class="proj-desc">Makeup brand website with a product showcase, portfolio, and contact experience.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Web development</span><span>E-commerce</span></div>
         </div>
+        <div class="project-links"><a href="https://msflavamakeup.com" target="_blank" rel="noopener noreferrer" aria-label="Visit project: MsFlava Makeup"><i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i> Visit project</a></div>
+      </div>
+      <div class="proj-card active" data-cat="web data">
+        <div class="project-visual web" aria-hidden="true"><i class="fas fa-globe"></i><span>Dashboard</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Web Apps</div>
+          <h3 class="proj-title">COVID-19 Tracker</h3>
+          <p class="proj-desc">Dashboard presenting global and country-level COVID-19 statistics and charts.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Web app</span><span>Data visualization</span></div>
+        </div>
+        <div class="project-links"><a href="https://covid-19-tracker-e4bda.web.app" target="_blank" rel="noopener noreferrer" aria-label="Visit project: COVID-19 Tracker"><i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i> Visit project</a></div>
+      </div>
+      <div class="proj-card active" data-cat="web ui">
+        <div class="project-visual web" aria-hidden="true"><i class="fas fa-globe"></i><span>Website prototype</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Web Apps</div>
+          <h3 class="proj-title">Construction Website</h3>
+          <p class="proj-desc">Construction-themed website interface using HTML, CSS, SCSS, and JavaScript.</p>
+          <div class="project-tech" aria-label="Technologies"><span>HTML</span><span>SCSS</span><span>JavaScript</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/contruction" target="_blank" rel="noopener noreferrer" aria-label="View source for Construction Website"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="web ui">
+        <div class="project-visual web" aria-hidden="true"><i class="fas fa-globe"></i><span>Website</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Web Apps</div>
+          <h3 class="proj-title">Shona Portfolio Website</h3>
+          <p class="proj-desc">Portfolio website source with a GitHub Pages publishing workflow.</p>
+          <div class="project-tech" aria-label="Technologies"><span>HTML</span><span>GitHub Pages</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/shonadery" target="_blank" rel="noopener noreferrer" aria-label="View source for Shona Portfolio Website"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="web ui">
+        <div class="project-visual web" aria-hidden="true"><i class="fas fa-globe"></i><span>UI demo</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Web Apps</div>
+          <h3 class="proj-title">PlayStation Website Demo</h3>
+          <p class="proj-desc">PlayStation-themed frontend design and website demonstration.</p>
+          <div class="project-tech" aria-label="Technologies"><span>HTML</span><span>CSS</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/myplaystation" target="_blank" rel="noopener noreferrer" aria-label="View source for PlayStation Website Demo"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="web ui">
+        <div class="project-visual web" aria-hidden="true"><i class="fas fa-globe"></i><span>UI demo</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Web Apps</div>
+          <h3 class="proj-title">Dashboard Interface</h3>
+          <p class="proj-desc">Reusable dashboard page and interface design.</p>
+          <div class="project-tech" aria-label="Technologies"><span>HTML</span><span>CSS</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/dashboardInt" target="_blank" rel="noopener noreferrer" aria-label="View source for Dashboard Interface"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="web ui">
+        <div class="project-visual web" aria-hidden="true"><i class="fas fa-globe"></i><span>UI template</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Web Apps</div>
+          <h3 class="proj-title">Bootstrap Login Template</h3>
+          <p class="proj-desc">Responsive login-page template built with Bootstrap components.</p>
+          <div class="project-tech" aria-label="Technologies"><span>HTML</span><span>Bootstrap</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/boostraplogin" target="_blank" rel="noopener noreferrer" aria-label="View source for Bootstrap Login Template"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="web ui bioinformatics">
+        <div class="project-visual web" aria-hidden="true"><i class="fas fa-globe"></i><span>UI prototype</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Web Apps</div>
+          <h3 class="proj-title">NGS Portal Interfaces</h3>
+          <p class="proj-desc">HTML, CSS, and JavaScript prototypes for a genomics portal login and administrator dashboard.</p>
+          <div class="project-tech" aria-label="Technologies"><span>HTML</span><span>CSS</span><span>JavaScript</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/NGS_Files" target="_blank" rel="noopener noreferrer" aria-label="View source for NGS Portal Interfaces"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="mobile ui">
+        <div class="project-visual mobile" aria-hidden="true"><i class="fas fa-mobile-screen-button"></i><span>UI demo</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Mobile Apps</div>
+          <h3 class="proj-title">Coffee Splash Screen</h3>
+          <p class="proj-desc">Flutter splash-screen recreation and mobile onboarding design exercise.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Flutter</span><span>Dart</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/CoffeeSplashScreen-Clone" target="_blank" rel="noopener noreferrer" aria-label="View source for Coffee Splash Screen"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="mobile ui">
+        <div class="project-visual mobile" aria-hidden="true"><i class="fas fa-mobile-screen-button"></i><span>UI demo</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Mobile Apps</div>
+          <h3 class="proj-title">Bubble Onboarding &amp; Login</h3>
+          <p class="proj-desc">Animated Flutter onboarding and login-screen interface.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Flutter</span><span>Dart</span><span>Animation</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/flutter_onboarding" target="_blank" rel="noopener noreferrer" aria-label="View source for Bubble Onboarding &amp; Login"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="utilities ui">
+        <div class="project-visual utilities" aria-hidden="true"><i class="fas fa-screwdriver-wrench"></i><span>Game</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Utilities</div>
+          <h3 class="proj-title">Simple Pong Game</h3>
+          <p class="proj-desc">Small Python implementation of the classic Pong game.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Python</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/SimplePong_Game" target="_blank" rel="noopener noreferrer" aria-label="View source for Simple Pong Game"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="ml ui">
+        <div class="project-visual ml" aria-hidden="true"><i class="fas fa-brain"></i><span>Learning project</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">ML &amp; AI</div>
+          <h3 class="proj-title">Image Processing Notebook Toolkit</h3>
+          <p class="proj-desc">Notebook experiments with Gaussian filters, image sharpening, Sobel gradients, and bilinear interpolation.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Python</span><span>Jupyter</span><span>Image processing</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/Simple-Gussian-Filter" target="_blank" rel="noopener noreferrer" aria-label="View source for Image Processing Notebook Toolkit"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="ml ui">
+        <div class="project-visual ml" aria-hidden="true"><i class="fas fa-brain"></i><span>Learning project</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">ML &amp; AI</div>
+          <h3 class="proj-title">Gaussian Particle Filter</h3>
+          <p class="proj-desc">Gaussian particle-filter implementation and notebook exercise, with references to the underlying filtering methods.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Python</span><span>Jupyter</span><span>Filtering</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/GUSSIANFILTER_ASSIGNMENT" target="_blank" rel="noopener noreferrer" aria-label="View source for Gaussian Particle Filter"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="ml ui">
+        <div class="project-visual ml" aria-hidden="true"><i class="fas fa-brain"></i><span>Course project</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">ML &amp; AI</div>
+          <h3 class="proj-title">Python Chatbot Exercises</h3>
+          <p class="proj-desc">Worked chatbot exercises and Python examples accompanying the DataCamp chatbot course.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Python</span><span>NLP</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/DataCamp_ChatBot_Solution" target="_blank" rel="noopener noreferrer" aria-label="View source for Python Chatbot Exercises"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="utilities">
+        <div class="project-visual utilities" aria-hidden="true"><i class="fas fa-screwdriver-wrench"></i><span>Utility</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Utilities</div>
+          <h3 class="proj-title">Time &amp; Date Script</h3>
+          <p class="proj-desc">Minimal Python script that prints the current system time and date.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Python</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/SIMPLEcodetoCheckTime/blob/main/.github/workflows/TimeAndDate.py" target="_blank" rel="noopener noreferrer" aria-label="View source for Time &amp; Date Script"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="utilities ui">
+        <div class="project-visual utilities" aria-hidden="true"><i class="fas fa-screwdriver-wrench"></i><span>Learning project</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Utilities</div>
+          <h3 class="proj-title">Prime Numbers Utility</h3>
+          <p class="proj-desc">Visual Basic .NET exercise for generating prime numbers up to 100.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Visual Basic .NET</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/ArrayOfPrimeNumbersTo100" target="_blank" rel="noopener noreferrer" aria-label="View source for Prime Numbers Utility"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
+      </div>
+      <div class="proj-card active" data-cat="utilities ui">
+        <div class="project-visual utilities" aria-hidden="true"><i class="fas fa-screwdriver-wrench"></i><span>Learning project</span></div>
+        <div class="proj-body">
+          <div class="proj-cat">Utilities</div>
+          <h3 class="proj-title">Odd Number Utility</h3>
+          <p class="proj-desc">Visual Basic .NET odd-number programming exercise.</p>
+          <div class="project-tech" aria-label="Technologies"><span>Visual Basic .NET</span></div>
+        </div>
+        <div class="project-links"><a href="https://github.com/iamamofa/OddNumVBNet" target="_blank" rel="noopener noreferrer" aria-label="View source for Odd Number Utility"><i class="fab fa-github" aria-hidden="true"></i> Source code</a></div>
       </div>
     </div>
+    <p class="project-empty" id="projectEmpty" hidden>No projects match your search. Try another keyword or choose All.</p>
   </article>
 
   <!-- ══ RESEARCH ══ -->
@@ -950,20 +1543,41 @@ navBtns.forEach(btn => {
   });
 });
 
-// ── FILTER BUTTONS ──
+// ── PROJECT SEARCH & FILTERS ──
 const filterBtns = document.querySelectorAll('.filter-btn');
-const projCards = document.querySelectorAll('.proj-card');
+const projCards = [...document.querySelectorAll('.proj-card')];
+const projectSearch = document.getElementById('projectSearch');
+const projectCount = document.getElementById('projectCount');
+const projectEmpty = document.getElementById('projectEmpty');
+let projectFilter = 'all';
+const searchableProjects = projCards.map(card => ({card, text: card.textContent.toLowerCase()}));
+
+function filterProjects() {
+  const words = projectSearch.value.toLowerCase().trim().split(/\s+/).filter(Boolean);
+  let visible = 0;
+  searchableProjects.forEach(({card, text}) => {
+    const categoryMatches = projectFilter === 'all' || card.dataset.cat.split(' ').includes(projectFilter);
+    const show = categoryMatches && words.every(word => text.includes(word));
+    card.classList.toggle('active', show);
+    if (show) visible++;
+  });
+  projectCount.textContent = visible === projCards.length
+    ? `Showing all ${visible} projects`
+    : `Showing ${visible} of ${projCards.length} projects`;
+  projectEmpty.hidden = visible > 0;
+}
 filterBtns.forEach(btn => {
   btn.addEventListener('click', () => {
-    filterBtns.forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const filter = btn.dataset.filter;
-    projCards.forEach(card => {
-      const show = filter === 'all' || card.dataset.cat === filter;
-      card.classList.toggle('active', show);
+    projectFilter = btn.dataset.filter;
+    filterBtns.forEach(b => {
+      const selected = b === btn;
+      b.classList.toggle('active', selected);
+      b.setAttribute('aria-pressed', String(selected));
     });
+    filterProjects();
   });
 });
+projectSearch.addEventListener('input', filterProjects);
 
 // ── TESTIMONIAL MODAL ──
 const modal = document.getElementById('testiModal');
@@ -1000,7 +1614,7 @@ animateReveal();
 
 // Stagger reveal items
 document.querySelectorAll('.stats-row, .services-grid, .testi-grid, .skills-grid, .projects-grid, .detail-grid').forEach(grid => {
-  [...grid.children].forEach((c,i) => { c.style.transitionDelay = (i*.08)+'s'; });
+  [...grid.children].forEach((c,i) => { c.style.transitionDelay = Math.min(i*.04,.2)+'s'; });
 });
 
 // ── CHAR COUNTER ──
